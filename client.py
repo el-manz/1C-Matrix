@@ -10,29 +10,39 @@ class Client:
 
     def register(self, host, port):
         self.sock_.connect((host, port))
-        # received_data = self.sock_.recv(1024).decode('utf8')
-        # print(received_data)
-        # assert received_data == "Client is registered~"
 
     def listen_to_morfeus(self):
-        # data = ""
-        # msg_queue = []
-        while True:
-            received_data = self.sock_.recv(1024).decode('utf8')
-            # data += received_data
-            # msg_queue = data.split('~')
-            # if
-            if not received_data:
-                break
-            print(received_data)
-            # self.sock_.send("Message received".encode('utf8'))
-            msg = "DFSD"
-            self.respond_to_morfeus(msg)
+        received_data = self.sock_.recv(1024).decode('utf8')
+        return received_data
 
     def respond_to_morfeus(self, msg):
         self.sock_.send(msg.encode('utf8'))
 
+    def interact_with_user(self):
+        state = "not_registered"
+        while True:
+            if state == "not_registered":
+                action = input().split()
+                if action[0] == "R":
+                    self.register(action[1], int(action[2]))
+                    state = "listening"
+
+            if state == "responding":
+                action = input().split()
+                if action[0] == "M":
+                    self.respond_to_morfeus(action[1])
+                elif action[0] == "S":
+                    msg = "No response"
+                    self.respond_to_morfeus(msg)
+                state = "listening"
+
+            if state == "listening":
+                received_data = self.listen_to_morfeus()
+                if received_data:
+                    state = "responding"
+                    print("Received private message: ", received_data)
+                    print("Please enter message or S to skip")
+
 
 c = Client()
-c.register('localhost', 8083)
-c.listen_to_morfeus()
+c.interact_with_user()
