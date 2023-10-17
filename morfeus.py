@@ -56,5 +56,6 @@ class Morfeus:
                     break
 
 
-m = Morfeus('localhost', 8076, 1)
+host, port, num_clients = input().split()
+m = Morfeus(host, int(port), int(num_clients))
 m.interaction_with_user()
