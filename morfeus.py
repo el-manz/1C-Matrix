@@ -51,6 +51,8 @@ class Morfeus:
                 elif action[0] == "MB":
                     responses = self.send_broadcast_message(action[1])
                     print("Responses received: ", responses)
+                elif action[0] == "GL":
+                    print(self.get_clients_list())
                 elif action[0] == "E":
                     self.exit()
                     break
